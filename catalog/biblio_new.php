@@ -66,6 +66,7 @@ function postVarsToBiblio($post) {
 			$path = pathinfo($image['name']);
 			$image_name = mb_strtolower($path['filename']) . generateRandomString(6) . "." . $path['extension'] ;
 			$biblioFld->setFieldData($image_name);
+			
 			if (getimagesize($image['tmp_name']) != 0) {
 				move_uploaded_file($image['tmp_name'], "../pictures/" . $image_name );
 			}
