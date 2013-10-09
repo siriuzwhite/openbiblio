@@ -51,6 +51,14 @@ class BiblioField {
       $valid = false;
       $this->_subfieldCdError = $loc->getText("biblioFieldError1");
     }
+	if ($this->_tag == 902 && $this->_subfieldCd == "a") {
+		if ( !empty($this->_fieldData) ) {
+			if (!file_exists("../pictures/" . $this->_fieldData) ) {
+				$valid = false;
+				$this->_fieldDataError = $loc->getText("biblioFieldError3");
+			}
+		}
+	}
     unset($loc);
     return $valid;
   }

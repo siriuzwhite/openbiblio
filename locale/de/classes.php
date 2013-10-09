@@ -44,6 +44,7 @@ $trans["biblioError1"]            = "\$text = 'Der Standort wird benötigt.';";
 #****************************************************************************
 $trans["biblioFieldError1"]       = "\$text = 'Das Feld wird benötigt.';";
 $trans["biblioFieldError2"]       = "\$text = 'Der Tag muss numerisch sein.';";
+$trans["biblioFieldError3"]       = "\$text = 'Keine gültige Bild-Datei.';";
 
 #****************************************************************************
 #*  Translation text for class BiblioQuery

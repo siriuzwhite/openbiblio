@@ -44,6 +44,7 @@ $trans["biblioError1"]            = "\$text = 'Call number is required.';";
 #****************************************************************************
 $trans["biblioFieldError1"]       = "\$text = 'Field is required.';";
 $trans["biblioFieldError2"]       = "\$text = 'Tag must be numeric.';";
+$trans["biblioFieldError3"]       = "\$text = 'Invalid image file type.';";
 
 #****************************************************************************
 #*  Translation text for class BiblioQuery

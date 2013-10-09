@@ -41,7 +41,7 @@ if (!isset($_REQUEST['posted'])) {
 function postVarsToBiblio($post) {
   require_once("../classes/Biblio.php");
   require_once("../classes/BiblioField.php");
-  
+  $image = $_FILES['image'];
   $biblio = new Biblio();
   $biblio->setMaterialCd($post["materialCd"]);
   $biblio->setCollectionCd($post["collectionCd"]);
@@ -62,7 +62,16 @@ function postVarsToBiblio($post) {
     $biblioFld->setTag($tag);
     $biblioFld->setSubfieldCd($subfieldCd);
     $biblioFld->setIsRequired($requiredFlg);
-    $biblioFld->setFieldData($value);
+		if ($tag == 902 && $subfieldCd == "a" && $image['error'] == 0) {
+			$path = pathinfo($image['name']);
+			$image_name = mb_strtolower($path['filename']) . generateRandomString(6) . "." . $path['extension'] ;
+			$biblioFld->setFieldData($image_name);
+			if (getimagesize($image['tmp_name']) != 0) {
+				move_uploaded_file($image['tmp_name'], "../pictures/" . $image_name );
+			}
+		} else {
+			$biblioFld->setFieldData($value);
+		}
     $biblio->addBiblioField($index,$biblioFld);
   }
   return $biblio;
@@ -131,7 +140,7 @@ function showForm($postVars, $pageErrors=array()) {
       }
     //-->
   </script>
-  <form name="newbiblioform" method="POST" action="../catalog/biblio_new.php">
+  <form name="newbiblioform" method="POST" enctype="multipart/form-data" action="../catalog/biblio_new.php">
 <?php
   include("../catalog/biblio_fields.php");
   include("../shared/footer.php");

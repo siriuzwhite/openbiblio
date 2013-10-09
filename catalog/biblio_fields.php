@@ -175,5 +175,3 @@
   </tr>
 
 </table>
-
-<p><sup>(2)</sup> <?php echo $loc->getText("PictDesc"); ?></p>

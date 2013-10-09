@@ -58,9 +58,11 @@ function printUsmarcInputText($tag,$subfieldCd,$required,&$postVars,&$pageErrors
   if ($required) {
     echo "<sup>*</sup> ";
   }
+  /*
   if (($tag==902) and ($subfieldCd=="a")) {
     echo "<sup>(2)</sup> ";
   }
+  */
   if (($showTagDesc) 
     && (isset($marcTags[$tag]))
     && (isset($marcSubflds[$arrayIndex]))){
@@ -77,7 +79,9 @@ function printUsmarcInputText($tag,$subfieldCd,$required,&$postVars,&$pageErrors
   if ($cntrlType == OBIB_TEXTAREA_CNTRL) {
     echo "<textarea name=\"values[".H($formIndex)."]\" cols=\"".H($cols)."\" rows=\"".H($rows)."\">";
     echo H($value)."</textarea>";
-  } else {
+  } elseif (($tag==902) and ($subfieldCd=="a")) {
+	echo "<input type=\"file\" name=\"image\">";
+  }	else {
     echo "<input type=\"text\"";
     echo " name=\"values[".H($formIndex)."]\" size=\"".H($size)."\" maxlength=\"".H($maxLen)."\" ";
     echo "value=\"".H($value)."\" >";

@@ -84,6 +84,14 @@
   function mkPostVars() {
     return _mkPostVars($_REQUEST, NULL);
   }
+  function generateRandomString($length = 10) {
+    $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+    $randomString = '';
+    for ($i = 0; $i < $length; $i++) {
+      $randomString .= $characters[rand(0, strlen($characters) - 1)];
+    }
+	return $randomString;
+  }
   
   # Compatibility
   $phpver = explode('.', PHP_VERSION);
