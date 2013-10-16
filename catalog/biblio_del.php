@@ -25,10 +25,22 @@
     $biblioQ->close();
     displayErrorPage($biblioQ);
   }
+	
+	//delete attached image
+	$biblio = $biblioQ->doQuery($bibid);
+	if (!$biblio) {
+    $biblioQ->close();
+    displayErrorPage($biblioQ);
+  }
+	
+	if (!empty($biblio->_biblioFields['902a']))
+		unlink("../pictures/" . $biblio->_biblioFields['902a']->_fieldData);
+	
   if (!$biblioQ->delete($bibid)) {
     $biblioQ->close();
     displayErrorPage($biblioQ);
   }
+	
   $biblioQ->close();
 
   #**************************************************************************
