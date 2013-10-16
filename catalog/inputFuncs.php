@@ -80,7 +80,14 @@ function printUsmarcInputText($tag,$subfieldCd,$required,&$postVars,&$pageErrors
     echo "<textarea name=\"values[".H($formIndex)."]\" cols=\"".H($cols)."\" rows=\"".H($rows)."\">";
     echo H($value)."</textarea>";
   } elseif (($tag==902) and ($subfieldCd=="a")) {
-	echo "<input type=\"file\" name=\"image\">";
+			echo "<a name=\"image\"></a>";
+			if ( !empty($value) ) {
+				echo "<img src=\"../pictures/" . $value . "\" width=\"150\"><br>";
+				echo "<input type=\"button\" onClick=\"self.location='".$_SERVER['PHP_SELF']. "?" . $_SERVER['QUERY_STRING'] . "&image=delete&#image'\" value=\"Bild l&ouml;schen\" class=\"button\"><br><br>";
+				echo "<input type=\"hidden\" name=\"current_image\" value=\"" . $value . "\">";
+				echo "Bild &auml;ndern:<br>";
+			}
+			echo "<input type=\"file\" name=\"image\">";
   }	else {
     echo "<input type=\"text\"";
     echo " name=\"values[".H($formIndex)."]\" size=\"".H($size)."\" maxlength=\"".H($maxLen)."\" ";

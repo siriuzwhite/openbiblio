@@ -11,13 +11,22 @@ $nav = "edit";
 require_once("../classes/Localize.php");
 $loc = new Localize(OBIB_LOCALE,$tab);
 
+
 if (!isset($_REQUEST['posted'])) {
   require_once("../shared/logincheck.php");
   if (!isset($_REQUEST['bibid'])) {
     header("Location: ../catalog/index.php");
     exit();
   }
-  $postVars = bibidToPostVars($_REQUEST['bibid']);
+	
+	if ($_REQUEST['image'] == 'delete') {
+		$biblio = getBiblioFromId($_REQUEST['bibid']);
+		unlink("../pictures/" . $biblio->_biblioFields['902a']->_fieldData);
+		$biblio->_biblioFields['902a']->_fieldData = "";
+		updateBiblio($biblio);
+	}
+	
+	$postVars = bibidToPostVars($_REQUEST['bibid']);
   showForm($postVars);
 } else {
   $postVars = $_POST;
@@ -69,7 +78,8 @@ function bibidToPostVars($bibid) {
 function postVarsToBiblio($post) {
   require_once("../classes/Biblio.php");
   require_once("../classes/BiblioField.php");
-  
+  $image = $_FILES['image'];
+	
   $biblio = new Biblio();
   $biblio->setBibid($post['bibid']);
   $biblio->setMaterialCd($post["materialCd"]);
@@ -92,7 +102,21 @@ function postVarsToBiblio($post) {
     $biblioFld->setTag($tag);
     $biblioFld->setSubfieldCd($subfieldCd);
     $biblioFld->setIsRequired($requiredFlg);
-    $biblioFld->setFieldData($value);
+    if ($tag == 902 && $subfieldCd == "a") {
+			if ($image['error'] == 0) {
+				$path = pathinfo($image['name']);
+				$image_name = mb_strtolower($path['filename']) . generateRandomString(6) . "." . $path['extension'] ;
+				$biblioFld->setFieldData($image_name);
+				if (getimagesize($image['tmp_name']) != 0) {
+					move_uploaded_file($image['tmp_name'], "../pictures/" . $image_name );
+					unlink("../pictures/" . $_POST['current_image']);
+				}
+			} else {
+				$biblioFld->setFieldData($_POST['current_image']);
+			}
+		} else {
+			$biblioFld->setFieldData($value);
+		}
     $biblio->addBiblioField($index,$biblioFld);
   }
   return $biblio;
@@ -126,6 +150,26 @@ function customFieldErrors($biblio) {
   }
   return $errors;
 }
+
+function getBiblioFromId($id) {
+  require_once("../classes/BiblioQuery.php");
+  
+  $biblioQ = new BiblioQuery();
+  $biblioQ->connect();
+  if ($biblioQ->errorOccurred()) {
+    $biblioQ->close();
+    displayErrorPage($biblioQ);
+  }
+	$bib = $biblioQ->doQuery($id);
+  if (!$bib) {
+    $biblioQ->close();
+    displayErrorPage($biblioQ);
+  }
+  $biblioQ->close();
+	
+	return $bib;
+}
+
 function updateBiblio($biblio) {
   require_once("../classes/BiblioQuery.php");
   
@@ -141,6 +185,7 @@ function updateBiblio($biblio) {
   }
   $biblioQ->close();
 }
+
 function showForm($postVars, $pageErrors=array()) {
   global $tab, $nav, $loc;
   $helpPage = "biblioEdit";
@@ -160,7 +205,7 @@ function showForm($postVars, $pageErrors=array()) {
       }
     //-->
   </script>
-  <form name="editbiblioform" method="POST" action="../catalog/biblio_edit.php">
+  <form name="editbiblioform" method="POST" enctype="multipart/form-data" action="../catalog/biblio_edit.php">
   <input type="hidden" name="bibid" value="<?php echo H($postVars["bibid"]);?>">
 <?php
   include("../catalog/biblio_fields.php");
