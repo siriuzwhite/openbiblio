@@ -51,7 +51,7 @@
       $copyQ->close();
       displayErrorPage($copyQ);
     }
-    $_POST["barcodeNmbr"] = sprintf("%0".$nzeros."s",$bibid).$CopyNmbr;
+    $_POST["barcodeNmbr"] = sprintf("%0".$nzeros."s",$bibid)."-".sprintf("%03s",$CopyNmbr);
   }
 
   #****************************************************************************

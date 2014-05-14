@@ -93,6 +93,7 @@
   }
   $searchType = $_POST["searchType"];
   $sortBy = $_POST["sortBy"];
+  
   if ($sortBy == "default") {
     if ($searchType == "author") {
       $sortBy = "author";
@@ -100,6 +101,15 @@
       $sortBy = "title";
     }
   }
+  
+  if ($searchType == "bibid") {
+    if ($_POST["searchText"] == "") {
+      $sortBy = "bibid";
+    } else {
+      header("Location: ../shared/biblio_view.php?bibid=".$_POST["searchText"]."&tab=cataloging");
+    }
+  } 
+  
   $searchText = trim($_POST["searchText"]);
   # remove redundant whitespace
   $searchText = preg_replace('/\s+/', " ", $searchText);
@@ -277,6 +287,10 @@ function changePage(page,sort)
         <tr>
           <td class="noborder" valign="top"><font class="small"><b><?php echo $loc->getText("biblioSearchCollection"); ?>:</b></font></td>
           <td class="noborder" colspan="3"><font class="small"><?php echo H($collectionDm[$biblio->getCollectionCd()]);?></font></td>
+        </tr>
+        <tr>
+          <td class="noborder" valign="top" nowrap="yes"><font class="small"><b><?php echo "ID" ?>:</b></font></td>
+          <td class="noborder" colspan="3"><font class="small"><?php echo $biblio->getBibid(); ?></font></td>
         </tr>
         <tr>
           <td class="noborder" valign="top" nowrap="yes"><font class="small"><b><?php echo $loc->getText("biblioSearchCall"); ?>:</b></font></td>

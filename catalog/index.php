@@ -59,6 +59,7 @@
         <option value="title"><?php echo $loc->getText("indexTitle");?>
         <option value="subject"><?php echo $loc->getText("indexSubject");?>
         <option value="callno"><?php echo $loc->getText("biblioFieldsCallNmbr");?>
+        <option selected value="bibid">ID
       </select>
       <input type="text" name="searchText" size="30" maxlength="256">
       <input type="hidden" name="sortBy" value="default">

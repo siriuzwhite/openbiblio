@@ -120,6 +120,7 @@
 ?>
 
 <?php echo $msg ?>
+<div style="float:left;margin-right:10px;">
 <table class="primary">
   <tr>
     <th align="left" colspan="2" nowrap="yes">
@@ -140,6 +141,14 @@
     </td>
     <td valign="top" class="primary">
       <?php echo H($collectionDm[$biblio->getCollectionCd()]);?>
+    </td>
+  </tr>
+  <tr>
+    <td class="primary" valign="top">
+      <?php echo "ID"; ?>:
+    </td>
+    <td valign="top" class="primary">
+      <?php echo $biblio->getBibid(); ?>
     </td>
   </tr>
   <tr>
@@ -198,6 +207,7 @@
   </tr>
 </table>
 <br />
+</div>
 
 <?php
   #****************************************************************************
@@ -206,6 +216,7 @@
 if (isset($biblioFlds["902a"]))
 {
 ?>
+<div>
 <table class="primary">
   <tr>
     <th align="left" colspan="2" nowrap="yes">
@@ -213,17 +224,18 @@ if (isset($biblioFlds["902a"]))
     </th>
   </tr>
   <tr>	
-    <td nowrap="true" class="primary" valign="top">
-      <?php printUsmarcText(902,"a",$marcTags, $marcSubflds, FALSE);?>:
-    </td>
     <td valign="top" class="primary">
-      <img src="../pictures/<?php echo $biblioFlds["902a"]->getFieldData();?>" width="150">
+      <a href="../pictures/<?php echo $biblioFlds["902a"]->getFieldData();?>"><img src="../pictures/<?php echo $biblioFlds["902a"]->getFieldData();?>" width="250"></a>
     </td>
   </tr>
 </table>
+</div>
 <br />
 <?
 }
+?>
+<br style="clear:both" />
+<?
 
   #****************************************************************************
   #*  Show copy information
@@ -363,6 +375,84 @@ if (isset($biblioFlds["902a"]))
     }
   ?>
 </table>
+
+<br />
+<a name="form"></a>
+<h1>Interesse bekunden:</h1>
+<?php 
+	
+	//mail stuff
+	
+	$to_mail = "m.rochow@rpk-leipzig.de";
+	
+	if ($_GET['action'] == 'sendmail') {
+		if (empty($_POST['name'])) {
+			echo "<font color=\"red\">Bitte Namen angeben!</font><br />";
+		} else {
+			
+			include_once("../classes/PHPMailerAutoload.php");
+			
+			$mail = new PHPMailer;
+			$mail->isSMTP();
+			$mail->Host = 'smtp.gmail.com';
+			$mail->Port = '587';
+			$mail->SMTPAuth = true;
+			$mail->Username = 'rpkmailer@gmail.com';
+			$mail->Password = 'rpkmailer01';
+			$mail->SMTPSecure = 'tls'; 
+			
+			
+			$mail->From = 'rpkmailer@gmail.com';
+			$mail->FromName = 'RPK Mailer';
+			$mail->addAddress($to_mail );
+
+			$mail->isHTML(true);
+
+			$mail->Subject = "[RPK Bibliothek] Interesse an " . $biblioFlds["245a"]->getFieldData();
+			
+			$content .= "Der Benutzer <b>\"" . $_POST['name'] . "\"</b> hat Interesse an:\n";
+			$content .= "<a href=\"".$_SERVER['SERVER_NAME'] . $_SERVER['PHP_SELF'] . "?bibid=".$bibid."&tab=cataloging\">" . $biblioFlds["245a"]->getFieldData() ."</a>";
+			
+			$content .= "<br><br><u>Nachricht des Benutzers:</u><br>";
+			$content .= $_POST['message'];
+			
+			$mail->Body = $content;
+
+			if(!$mail->send()) {
+				 echo "<font color=\"red\">Fehleraufgetreten!</font><br />";
+				 echo 'Mailer Error: ' . $mail->ErrorInfo . "<br />";
+			} else {
+				echo "<font color=\"green\">Nachricht wurde versand!</font><br />";
+			}
+		}
+	}
+
+?>
+<form action="<?=$_SERVER['PHP_SELF']."?bibid=".$bibid."&tab=opac&action=sendmail#form";?>" method="POST">
+	<input type="hidden" name="bibid" value="<?=$bibid;?>" />
+	<table class="primary">
+		<tbody>
+			<tr>
+				<th align="left" colspan="2" nowrap="yes">
+					Kontaktformular
+				</th>
+			</tr>
+			<tr>
+				<td class="primary">Name:</td>
+				<td class="primary"><input name="name" style="width: 200px;" type="text" /></td>
+			</tr>
+			<tr>
+				<td class="primary">Nachricht<br>(optional):</td>
+				<td class="primary">
+					<textarea type="text" style="border-style: inset; border-width: 2px; width: 200px;" name="message" rows="5" cols></textarea>
+			</tr>
+			<tr>
+				<td class="primary"></td>
+				<td class="primary"><input style="vertical-align: right;" type="submit" /></td>
+			</tr>
+		</tbody>
+	</table>
+</form>
 
 
 <?php require_once("../shared/footer.php"); ?>
