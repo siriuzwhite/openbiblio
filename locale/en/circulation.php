@@ -151,7 +151,7 @@ $trans["mbrViewHoldHdr7"]         = "\$text='Status';";
 $trans["mbrViewHoldHdr8"]         = "\$text='Due Back';";
 $trans["mbrViewNoHolds"]          = "\$text='No bibliographies are currently on hold.';";
 $trans["mbrViewBalMsg"]           = "\$text='Note: Member has an outstanding account balance of %bal%.';";
-$trans["mbrViewShipEnd"]          = "\$text='Attention: Membership of this member has expired!';"
+$trans["mbrViewShipEnd"]          = "\$text='Attention: Membership of this member has expired!';";
 $trans["mbrPrintCheckouts"]	  = "\$text='print checkouts';";
 $trans["Renew All"]	  	  = "\$text='Renew All';";
 $trans["mbrViewDel"]              = "\$text='del';";
