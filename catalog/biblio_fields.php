@@ -107,7 +107,7 @@
   </tr>
   <tr>
     <td nowrap="true" class="primary" valign="top">
-      <sup>*</sup> <?php echo $loc->getText("biblioFieldsCallNmbr"); ?>:
+      <?php echo $loc->getText("biblioFieldsCallNmbr"); ?>:
     </td>
     <td valign="top" class="primary">
       <?php printInputText("callNmbr1",20,20,$postVars,$pageErrors); ?><br>
